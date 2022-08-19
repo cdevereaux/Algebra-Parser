@@ -5,7 +5,7 @@
 class Parse_Tree_Node
 {
 public:
-    virtual double evaluate(double x) {}
+    virtual double evaluate(double x) { return 0; }
 };
 
 typedef std::shared_ptr<Parse_Tree_Node> Parse_Tree_Ptr;
