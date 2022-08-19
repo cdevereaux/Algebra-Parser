@@ -20,7 +20,7 @@ Parse_Tree_Ptr parse(std::string str)
 }
 
 //finds rightmost instance of any of the given operands,
-//ignores unary minuses
+//ignores unary plusses & minuses
 //returns str.size() on failure
 static size_t find_binary_operand(std::string str, std::vector<char> ops)
 {
@@ -31,7 +31,7 @@ static size_t find_binary_operand(std::string str, std::vector<char> ops)
         else if (str.at(i) == ')') paren_count++;
         else if ((paren_count == 0))
         {
-            if (str.at(i) == '-')
+            if (str.at(i) == '-' || str.at(i) == '+')
             {
                 //if there is an open parenthesis or operand to the left
                 //of a valid minus sign, then it must be a unary minus
