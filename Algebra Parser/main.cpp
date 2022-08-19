@@ -6,10 +6,12 @@ int main()
 {
     std::cout << "f(x) = ";
     std::string input;
-    std::getline(std::cin, input);
+    while (std::getline(std::cin, input))
+    {
+        auto formula = parse(input);
 
-    auto formula = parse(input);
-
-    //formula->draw();
-    std::cout << formula->evaluate(5) << std::endl;
+         //formula->draw();
+        std::cout << formula->evaluate(5) << std::endl;
+        std::cout << "f(x) = ";
+    }
 }

@@ -9,21 +9,22 @@
 //finds rightmost instance of any of the given operands,
 //ignores unary plusses & minuses
 //returns str.size() on failure
-static size_t find_binary_operand(std::string str, std::vector<char> ops)
+static size_t find_binary_operand(const std::string &str, std::vector<char> ops)
 {
     auto paren_count = 0;
-    for (size_t i = str.size() - 1; i > -1; i--)
+    for (auto it = str.crbegin(); it != str.crend(); it++)
     {
-        if (str.at(i) == '(') paren_count--;
-        else if (str.at(i) == ')') paren_count++;
+        if ( *it == '(') paren_count--;
+        else if ( *it == ')') paren_count++;
         else if ((paren_count == 0))
         {
-            if (str.at(i) == '-' || str.at(i) == '+')
+            //check for unary operands
+            if ( *it == '-' || *it == '+')
             {
                 //if there is an open parenthesis or operand to the left
                 //of a valid minus sign, then it must be a unary minus
                 char c;
-                if (i == 0 || (c = str.at(i - 1), c == '(') ||
+                if ( (it+1) == str.crend() || (c = *(it+1), c == '(') ||
                     c == '+' || c == '-' || c == '*' || c == '/' || c == '^')
                 {
                     continue;
@@ -31,9 +32,9 @@ static size_t find_binary_operand(std::string str, std::vector<char> ops)
             }
             for (auto c : ops)
             {
-                if (str.at(i) == c)
+                if ( *it == c)
                 {
-                    return i;
+                    return it.base() - str.begin() - 1;
                 }
             }
         }
@@ -93,6 +94,7 @@ static Parse_Tree_Ptr parse_req(std::string str)
     //check if only a constant remains
     try
     {
+        //stod throws exception on failure
         return std::make_shared<Constant_Node>(std::stod(str));
     }
     //else try to find function that prefixes str
