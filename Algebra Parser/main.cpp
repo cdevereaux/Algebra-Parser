@@ -5,17 +5,18 @@
 
 int main()
 {
-    Tree_Printer printer;
-
     std::cout << "f(x) = ";
     std::string input;
     while (std::getline(std::cin, input))
     {
-        auto formula = parse(input);
-
-        
-        std::cout << formula->evaluate(5) << std::endl;
-        std::cout << "f(x) = ";
-        printer.print(formula);
+        try {
+            auto formula = parse(input);
+            std::cout << formula->evaluate(5);
+        }
+        catch (std::exception &e)
+        {
+            std::cerr << e.what() << std::endl;
+        }
+        std::cout << std::endl << "f(x) = ";
     }
 }

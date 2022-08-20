@@ -6,6 +6,19 @@
 #include "parsable_functions.h"
 
 
+static void validate_parentheses(const std::string& str)
+{
+    auto paren_count = 0;
+    for (auto it = str.cbegin(); it != str.cend(); it++)
+    {
+        if (*it == '(') paren_count++;
+        else if (*it == ')') paren_count--;
+        if (paren_count < 0) throw Mismatched_Parentheses_Exception();
+    }
+    if (paren_count != 0) throw Mismatched_Parentheses_Exception();
+}
+
+
 //finds rightmost instance of any of the given operands,
 //ignores unary plusses & minuses
 //returns str.size() on failure
@@ -47,8 +60,7 @@ static Parse_Tree_Ptr parse_req(std::string str)
 {
     if (str.empty())
     {
-        std::cerr << "Could not parse." << std::endl;
-        throw "temp";
+        throw std::exception();
     }
 
     if ((str.front() == '(') && (str.back() == ')'))
@@ -79,8 +91,17 @@ static Parse_Tree_Ptr parse_req(std::string str)
     {
         auto left_substr = str.substr(0, ind);
         auto right_substr = str.substr(ind + 1);
-        if (str.at(ind) == '+') return std::make_shared<Addition_Node>(left_substr, right_substr);
-        else return std::make_shared<Subtraction_Node>(left_substr, right_substr);
+        try {
+            if (str.at(ind) == '+') return std::make_shared<Addition_Node>(left_substr, right_substr);
+            else return std::make_shared<Subtraction_Node>(left_substr, right_substr);
+        }
+        catch (Unknown_Function_Exception& e)
+        {
+            throw e;
+        }
+        catch (...) {
+            throw Missing_Operand_Exception(str.at(ind), left_substr, right_substr);
+        }        
     }
 
     //Search for multiplication and division
@@ -89,8 +110,17 @@ static Parse_Tree_Ptr parse_req(std::string str)
     {
         auto left_substr = str.substr(0, ind);
         auto right_substr = str.substr(ind + 1);
-        if (str.at(ind) == '*') return std::make_shared<Multiplication_Node>(left_substr, right_substr);
-        else return std::make_shared<Division_Node>(left_substr, right_substr);
+        try {
+            if (str.at(ind) == '*') return std::make_shared<Multiplication_Node>(left_substr, right_substr);
+            else return std::make_shared<Division_Node>(left_substr, right_substr);
+        }
+        catch (Unknown_Function_Exception& e)
+        {
+            throw e;
+        }
+        catch (...) {
+            throw Missing_Operand_Exception(str.at(ind), left_substr, right_substr);
+        }
     }
 
     //Search for exponentiation
@@ -99,7 +129,16 @@ static Parse_Tree_Ptr parse_req(std::string str)
     {
         auto left_substr = str.substr(0, ind);
         auto right_substr = str.substr(ind + 1);
-        return std::make_shared<Exponentiation_Node>(left_substr, right_substr);
+        try {
+            return std::make_shared<Exponentiation_Node>(left_substr, right_substr);
+        }
+        catch (Unknown_Function_Exception& e)
+        {
+            throw e;
+        }
+        catch (...) {
+            throw Missing_Operand_Exception(str.at(ind), left_substr, right_substr);
+        }
     }
 
     //check if only a constant remains
@@ -120,10 +159,8 @@ static Parse_Tree_Ptr parse_req(std::string str)
                 }
             }
         }
+        throw Unknown_Function_Exception(str);
     }
-
-    std::cerr << "Left with: " << str << std::endl;
-    throw "temp";
 }
 
 
@@ -136,6 +173,9 @@ Parse_Tree_Ptr parse(std::string str)
     //make all characters lower-case
     std::transform(str.cbegin(), str.cend(), str.begin(),
         [](char c) { return std::tolower(c); });
+
+    //check to make sure all parentheses match
+    validate_parentheses(str);
 
     return parse_req(str);
 }

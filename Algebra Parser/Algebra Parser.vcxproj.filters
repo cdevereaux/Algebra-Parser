@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Tree Printer">
-      <UniqueIdentifier>{f2251033-be06-41de-abb6-d52e2c8792e4}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -27,9 +24,6 @@
     <ClCompile Include="parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Tree Printer\tree_printer.cpp">
-      <Filter>Tree Printer</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="parse_tree.h">
@@ -40,9 +34,6 @@
     </ClInclude>
     <ClInclude Include="parsable_functions.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Tree Printer\tree_printer.h">
-      <Filter>Tree Printer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
