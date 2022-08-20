@@ -51,10 +51,21 @@ static Parse_Tree_Ptr parse_req(std::string str)
         throw "temp";
     }
 
-    //TODO: Prevent (a)(b) -> a)(b
     if ((str.front() == '(') && (str.back() == ')'))
     {
-        return parse_req(str.substr(1, str.size() - 2));
+        auto paren_count = 1;
+        for (auto i = 1u; i < str.size(); i++)
+        {
+            auto c = str.at(i);
+            if (c == '(') paren_count++;
+            else if (c == ')') {
+                paren_count--;
+                if (paren_count == 0) {
+                    if (i == (str.size() - 1)) return parse_req(str.substr(1, str.size() - 2));
+                    else break;
+                }
+            }
+        }   
     }
 
     if (str == "x")
