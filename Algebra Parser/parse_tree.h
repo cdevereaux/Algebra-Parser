@@ -11,50 +11,21 @@ public:
 
 typedef std::shared_ptr<Parse_Tree_Node> Parse_Tree_Ptr;
 
-class Addition_Node : public Parse_Tree_Node
+enum class Binary_Operator
+{
+    Addition = '+', Subtraction = '-', Multiplication = '*', Division = '/', Exponentiation = '^'
+};
+
+class Binary_Operator_Node : public Parse_Tree_Node
 {
 private:
+    const Binary_Operator op;
     Parse_Tree_Ptr left, right;
 public:
-    Addition_Node(std::string left_substr, std::string right_substr);
+    Binary_Operator_Node(Binary_Operator op, std::string left_substr, std::string right_substr);
     double evaluate(double x) const override;
 };
 
-class Subtraction_Node : public Parse_Tree_Node
-{
-private:
-    Parse_Tree_Ptr left, right;
-public:
-    Subtraction_Node(std::string left_substr, std::string right_substr);
-    double evaluate(double x) const override;
-};
-
-class Multiplication_Node : public Parse_Tree_Node
-{
-private:
-    Parse_Tree_Ptr left, right;
-public:
-    Multiplication_Node(std::string left_substr, std::string right_substr);
-    double evaluate(double x) const override;
-};
-
-class Division_Node : public Parse_Tree_Node
-{
-private:
-    Parse_Tree_Ptr left, right;
-public:
-    Division_Node(std::string left_substr, std::string right_substr);
-    double evaluate(double x) const override;
-};
-
-class Exponentiation_Node : public Parse_Tree_Node
-{
-private:
-    Parse_Tree_Ptr left, right;
-public:
-    Exponentiation_Node(std::string left_substr, std::string right_substr);
-    double evaluate(double x) const override;
-};
 
 class Function_Node : public Parse_Tree_Node
 {

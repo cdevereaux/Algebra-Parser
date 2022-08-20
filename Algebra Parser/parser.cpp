@@ -91,17 +91,8 @@ static Parse_Tree_Ptr parse_req(std::string str)
     {
         auto left_substr = str.substr(0, ind);
         auto right_substr = str.substr(ind + 1);
-        try {
-            if (str.at(ind) == '+') return std::make_shared<Addition_Node>(left_substr, right_substr);
-            else return std::make_shared<Subtraction_Node>(left_substr, right_substr);
-        }
-        catch (Unknown_Function_Exception& e)
-        {
-            throw e;
-        }
-        catch (...) {
-            throw Missing_Operand_Exception(str.at(ind), left_substr, right_substr);
-        }        
+       if (str.at(ind) == '+') return std::make_shared<Binary_Operator_Node>(Binary_Operator::Addition, left_substr, right_substr);
+       else return std::make_shared<Binary_Operator_Node>(Binary_Operator::Subtraction, left_substr, right_substr);
     }
 
     //Search for multiplication and division
@@ -110,17 +101,8 @@ static Parse_Tree_Ptr parse_req(std::string str)
     {
         auto left_substr = str.substr(0, ind);
         auto right_substr = str.substr(ind + 1);
-        try {
-            if (str.at(ind) == '*') return std::make_shared<Multiplication_Node>(left_substr, right_substr);
-            else return std::make_shared<Division_Node>(left_substr, right_substr);
-        }
-        catch (Unknown_Function_Exception& e)
-        {
-            throw e;
-        }
-        catch (...) {
-            throw Missing_Operand_Exception(str.at(ind), left_substr, right_substr);
-        }
+        if (str.at(ind) == '*') return std::make_shared<Binary_Operator_Node>(Binary_Operator::Multiplication, left_substr, right_substr);
+        else return std::make_shared<Binary_Operator_Node>(Binary_Operator::Division, left_substr, right_substr);
     }
 
     //Search for exponentiation
@@ -129,16 +111,7 @@ static Parse_Tree_Ptr parse_req(std::string str)
     {
         auto left_substr = str.substr(0, ind);
         auto right_substr = str.substr(ind + 1);
-        try {
-            return std::make_shared<Exponentiation_Node>(left_substr, right_substr);
-        }
-        catch (Unknown_Function_Exception& e)
-        {
-            throw e;
-        }
-        catch (...) {
-            throw Missing_Operand_Exception(str.at(ind), left_substr, right_substr);
-        }
+        return std::make_shared<Binary_Operator_Node>(Binary_Operator::Exponentiation, left_substr, right_substr);
     }
 
     //check if only a constant remains

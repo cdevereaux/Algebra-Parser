@@ -2,48 +2,33 @@
 #include "parsable_functions.h"
 
 
-Addition_Node::Addition_Node(std::string left_substr, std::string right_substr) :
-    left(parse(left_substr)), right(parse(right_substr)) {};
-
-double Addition_Node::evaluate(double x) const
-{
-    return left->evaluate(x) + right->evaluate(x);
+Binary_Operator_Node::Binary_Operator_Node(Binary_Operator op, std::string left_substr, std::string right_substr) 
+    try : op(op), left(parse(left_substr)), right(parse(right_substr)) {}
+catch (Unknown_Function_Exception &e) {
+    throw e;
 }
+catch (...) {
+    throw Missing_Operand_Exception(op, &left_substr, &right_substr);
+};
 
-
-Subtraction_Node::Subtraction_Node(std::string left_substr, std::string right_substr) :
-    left(parse(left_substr)), right(parse(right_substr)) {};
-
-double Subtraction_Node::evaluate(double x) const
+double Binary_Operator_Node::evaluate(double x) const
 {
-    return left->evaluate(x) - right->evaluate(x);
-}
-
-
-Multiplication_Node::Multiplication_Node(std::string left_substr, std::string right_substr) :
-    left(parse(left_substr)), right(parse(right_substr)) {};
-
-double Multiplication_Node::evaluate(double x) const
-{
-    return left->evaluate(x) * right->evaluate(x);
-}
-
-
-Division_Node::Division_Node(std::string left_substr, std::string right_substr) :
-    left(parse(left_substr)), right(parse(right_substr)) {};
-
-double Division_Node::evaluate(double x) const
-{
-    return left->evaluate(x) / right->evaluate(x);
-}
-
-
-Exponentiation_Node::Exponentiation_Node(std::string left_substr, std::string right_substr) :
-    left(parse(left_substr)), right(parse(right_substr)) {};
-
-double Exponentiation_Node::evaluate(double x) const
-{
-    return pow(left->evaluate(x), right->evaluate(x));
+    switch (op)
+    {
+    case Binary_Operator::Addition:
+        return left->evaluate(x) + right->evaluate(x);
+    case Binary_Operator::Subtraction:
+        return left->evaluate(x) - right->evaluate(x);
+    case Binary_Operator::Multiplication:
+        return left->evaluate(x) * right->evaluate(x);
+    case Binary_Operator::Division:
+        return left->evaluate(x) / right->evaluate(x);
+    case Binary_Operator::Exponentiation:
+        return pow(left->evaluate(x), right->evaluate(x));
+    default:
+        //Should never run, all enum values are accounted for above
+        throw std::exception();
+    }
 }
 
 

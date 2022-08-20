@@ -12,11 +12,11 @@ public:
 	const char op;
 	const bool left_missing, right_missing;
 	
-	Missing_Operand_Exception(char op, std::string left, std::string right)
-		: op(op), left_missing(left.empty()), right_missing(right.empty())
+	Missing_Operand_Exception(Binary_Operator op, std::string *left, std::string *right)
+		: op(static_cast<char>(op)), left_missing(left->empty()), right_missing(right->empty())
 	{
 		_what = "Error: expected two operands for ";
-		_what += op;
+		_what += this->op;
 		if (left_missing && right_missing) _what += "\nMissing both operands.";
 		else if (left_missing) _what += "\nMissing left operand.";
 		else if (right_missing) _what += "\nMissing right operand.";
